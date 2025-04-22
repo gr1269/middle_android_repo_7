@@ -148,19 +148,22 @@ fun ProductCard(
     onAddToCart: () -> Unit
 ) {
     val actionLabel = stringResource(R.string.add_product_to_cart, product.name)
+    val customActions = remember(actionLabel, onAddToCart) {
+        listOf(
+            CustomAccessibilityAction(
+                label = actionLabel,
+                action = {
+                    onAddToCart()
+                    true
+                }
+            )
+        )
+    }
     Card(
         modifier = modifier
             .fillMaxWidth()
             .semantics {
-                customActions = listOf(
-                    CustomAccessibilityAction(
-                        label = actionLabel,
-                        action = {
-                            onAddToCart()
-                            true
-                        }
-                    )
-                )
+                this.customActions = customActions
             }
     ) {
         Column {
@@ -192,21 +195,18 @@ fun ProductCard(
                         text = product.name,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = Color(0xFFAAAAAA)
+                        overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(R.string.price_format, product.price),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFFAAAAAA)
                     )
                 }
                 val actionDescription = stringResource(R.string.add_product_to_cart, product.name)
                 Icon(
                     Icons.Default.ShoppingCart,
                     contentDescription = stringResource(R.string.add_to_cart),
-                    tint = Color(0xFFAAAAAA),
                     modifier = Modifier
                         .clickable(
                             onClickLabel = actionDescription
